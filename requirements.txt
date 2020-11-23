@@ -11,3 +11,4 @@ python-gitlab
 twine
 fsspec
 sklearn
+s3fs

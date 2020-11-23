@@ -8,6 +8,7 @@ requirements = [x.strip() for x in content if 'git+' not in x]
 setup(name='taxifare_deep',
       version="1.0",
       description="Project Description",
+      install_requires=requirements,
       packages=find_packages(),
       test_suite = 'tests',
       # include_package_data: to install data from MANIFEST.in

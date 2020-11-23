@@ -1,70 +1,32 @@
-# Data analysis
-- Document here the project: taxifare_deep
-- Description: Project Description
-- Data Source:
-- Type of analysis:
+# Taxifare Deep
 
-Please document the project the better you can.
+Basic Deep Learning model applied to the TaxiFare problem.
 
-# Stratup the project
+## Test it with Google Collab
 
-The initial setup.
+Open `notebook/taxifare_deep.ipynb` with collab and run
 
-Create virtualenv and install the project:
-```bash
-  $ sudo apt-get install virtualenv python-pip python-dev
-  $ deactivate; virtualenv ~/venv ; source ~/venv/bin/activate ;\
-    pip install pip -U; pip install -r requirements.txt
+```python
+! pip install --quiet git+https://github.com/brunolajoie/taxifare_deep
 ```
 
-Unittest test:
-```bash
-  $ make clean install test
+## Basic workflow
+
+```python
+from taxifare_deep.trainer import Trainer
+
+# Instanciate trainer with number of rows to download and use
+trainer = Trainer(nrows=10000)
+
+# clean data
+trainer.clean()
+
+# Preprocess data and create train/test/split
+trainer.preproc(test_size=0.3)
+
+# Fit neural network and show training performance
+trainer.fit(plot_history=True, verbose=1)
+
+# evaluate on test set (by default the holdout from train/test/split)
+trainer.evaluate(X_test=None, y_test=None)
 ```
-
-Check for taxifare_deep in gitlab.com/{group}.
-If your project is not set please add it:
-
-- Create a new project on `gitlab.com/{group}/taxifare_deep`
-- Then populate it:
-
-```bash
-  $ ##   e.g. if group is "{group}" and project_name is "taxifare_deep"
-  $ git remote add origin git@gitlab.com:{group}/taxifare_deep.git
-  $ git push -u origin master
-  $ git push -u origin --tags
-```
-
-Functionnal test with a script:
-```bash
-  $ cd /tmp
-  $ taxifare_deep-run
-```
-# Install
-Go to `gitlab.com/{group}/taxifare_deep` to see the project, manage issues,
-setup you ssh public key, ...
-
-Create a python3 virtualenv and activate it:
-```bash
-  $ sudo apt-get install virtualenv python-pip python-dev
-  $ deactivate; virtualenv -ppython3 ~/venv ; source ~/venv/bin/activate
-```
-
-Clone the project and install it:
-```bash
-  $ git clone gitlab.com/{group}/taxifare_deep
-  $ cd taxifare_deep
-  $ pip install -r requirements.txt
-  $ make clean install test                # install and test
-```
-Functionnal test with a script:
-```bash
-  $ cd /tmp
-  $ taxifare_deep-run
-``` 
-
-# Continus integration
-## Github 
-Every push of `master` branch will execute `.github/workflows/pythonpackages.yml` docker jobs.
-## Gitlab
-Every push of `master` branch will execute `.gitlab-ci.yml` docker jobs.

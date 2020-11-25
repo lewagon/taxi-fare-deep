@@ -22,6 +22,6 @@ class Network():
             monitor='val_loss', patience=5, verbose=0, restore_best_weights=True)
 
         history = self.model.fit(X, y, validation_split=0.3,
-                  epochs=400, batch_size=64, callbacks=[es],
+                  epochs=400, batch_size=128, callbacks=[es],
                   verbose=verbose, workers=-1, use_multiprocessing=True)
         return history

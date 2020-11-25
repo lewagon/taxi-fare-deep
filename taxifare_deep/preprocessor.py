@@ -1,28 +1,31 @@
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from taxifare_deep.encoders import TimeFeaturesEncoder, DistanceTransformer
 
-class Preprocessor():
+def create_pipeline():
+    dist_features = [
+            "pickup_latitude",
+            "pickup_longitude",
+            'dropoff_latitude',
+            'dropoff_longitude']
 
-    def __init__(self):
-        '''initialize the pipeline'''
-        dist_pipe = Pipeline([
-            ('dist_trans', DistanceTransformer()),
-            ('stdscaler', StandardScaler())
-        ])
-        time_pipe = Pipeline([
-            ('time_enc', TimeFeaturesEncoder('pickup_datetime')),
-            ('stdscaler', StandardScaler())
-        ])
-        pipe = ColumnTransformer([
-            ('distance', dist_pipe, [
-                "pickup_latitude",
-                "pickup_longitude",
-                'dropoff_latitude',
-                'dropoff_longitude'
-            ]),
-            ('time', time_pipe, ['pickup_datetime'])],
-            remainder="drop",  # Drop all other features to start with
-            n_jobs=-1)
-        self.pipe = pipe
+    dist_pipe = Pipeline([
+        ('dist_trans', DistanceTransformer()),
+        ('stdscaler', StandardScaler())
+    ])
+
+    col_trans1 = ColumnTransformer([
+        ('time_proc', TimeFeaturesEncoder('pickup_datetime'), ['pickup_datetime']),
+        ('dist_proc', dist_pipe, dist_features),
+        ('passenger_proc', StandardScaler(), ['passenger_count'])],
+        remainder="drop",
+        n_jobs=-1)
+
+    col_trans2 = ColumnTransformer([
+        # one hot encode 'dow' and 'year' (the first two columns out of col_trans1)
+        ('ohe', OneHotEncoder(handle_unknown='ignore'), [0, 1])],
+        remainder="passthrough",
+        n_jobs=-1)
+
+    return make_pipeline(col_trans1, col_trans2)

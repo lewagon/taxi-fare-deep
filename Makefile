@@ -1,6 +1,9 @@
 # ----------------------------------
 #          INSTALL & TEST
 # ----------------------------------
+run:
+	@ python -m taxifare_deep.trainer
+
 install_requirements:
 	@pip install -r requirements.txt
 

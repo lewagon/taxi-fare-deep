@@ -1,8 +1,14 @@
 # ----------------------------------
-#          INSTALL & TEST
-# ----------------------------------
+#					USE PACKAGE
+# __________________________________
+
+
 run:
 	@ python -m taxifare_deep.trainer
+
+# ----------------------------------
+#          INSTALL & TEST
+# ----------------------------------
 
 install_requirements:
 	@pip install -r requirements.txt
@@ -49,15 +55,3 @@ count_lines:
 	@find ./tests -name '*.py' -exec  wc -l {} \; | sort -n| awk \
         '{printf "%4s %s\n", $$1, $$2}{s+=$$0}END{print s}'
 	@echo ''
-
-# ----------------------------------
-#      UPLOAD PACKAGE TO PYPI
-# ----------------------------------
-build:
-	@python setup.py sdist bdist_wheel
-
-pypi_test:
-	@twine upload -r testpypi dist/* -u lologibus2
-
-pypi:
-	@twine upload dist/* -u lologibus2

@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from taxifare_deep.utils import haversine_vectorized, sinuser, cosinuser
+import pygeohash as gh
 import time
 
 
@@ -18,7 +19,6 @@ class TimeFeaturesEncoder(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X, y=None):
-        print("###### start TimeFeaturesEncoder...")
         start_time = time.time()
         assert isinstance(X, pd.DataFrame)
         pickup_dt = pd.to_datetime(
@@ -33,7 +33,6 @@ class TimeFeaturesEncoder(BaseEstimator, TransformerMixin):
         month_sin = sinuser(month, 12)
         month_cos = cosinuser(month, 12)
         year = pickup_dt.year
-        print("###### TimeFeaturesEncoder time elasped (s):", time.time() - start_time)
         return pd.concat([dow, year, hour_sin, hour_cos, month_sin, month_cos], axis=1)
 
 
@@ -59,8 +58,6 @@ class DistanceTransformer(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X, y=None):
-        print("##### start DistanceTransformer...")
-        start_time = time.time()
         assert isinstance(X, pd.DataFrame)
         X_ = X.copy()
         X_["distance"] = haversine_vectorized(
@@ -70,5 +67,24 @@ class DistanceTransformer(BaseEstimator, TransformerMixin):
             end_lat=self.end_lat,
             end_lon=self.end_lon,
         )
-        print("###### DistanceTransformer time elasped (s):", time.time() - start_time)
         return X_[["distance"]]
+
+class AddGeohash(BaseEstimator, TransformerMixin):
+    '''
+    Add a geohash (ex: "dr5rx") of len "precision" = 5 by default
+    corresponding to each (lon,lat) tuple, for pick-up, and drop-off
+    '''
+
+    def __init__(self, precision=5):
+        self.precision = precision
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X, y=None):
+        assert isinstance(X, pd.DataFrame)
+        X['geohash_pickup'] = X.apply(
+            lambda x: gh.encode(x.pickup_latitude, x.pickup_longitude, precision=self.precision), axis=1)
+        X['geohash_dropoff'] = X.apply(
+            lambda x: gh.encode(x.dropoff_latitude, x.dropoff_longitude, precision=self.precision), axis=1)
+        return X[['geohash_pickup', 'geohash_dropoff']]

@@ -12,3 +12,5 @@ twine
 fsspec
 sklearn
 s3fs
+pygeohash
+tensorflow

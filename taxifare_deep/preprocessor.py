@@ -24,9 +24,14 @@ def create_pipeline():
         OneHotEncoder(handle_unknown="ignore", sparse=True)
     )
 
-    col_trans1 = ColumnTransformer(
+    time_pipe = make_pipeline(
+        TimeFeaturesEncoder("pickup_datetime"),
+        OneHotEncoder(handle_unknown="ignore", sparse=True)
+    )
+
+    final_pipe = ColumnTransformer(
         [
-            ("time_preproc", TimeFeaturesEncoder("pickup_datetime"), ["pickup_datetime"]),
+            ("time_preproc", time_pipe, ["pickup_datetime"]),
             ("geohash", geohash_pipe, lonlat_features),
             ("dist_preproc", dist_pipe, lonlat_features),
             ("passenger_scaler", StandardScaler(), ["passenger_count"]),
@@ -35,12 +40,4 @@ def create_pipeline():
         n_jobs=-1,
     )
 
-    # One-hot-encode 'dow' and 'year' columns created from col_trans1
-    # at index [0,1]
-    col_trans2 = ColumnTransformer(
-        [("ohe_dates", OneHotEncoder(handle_unknown="ignore"), [0, 1])],
-        remainder="passthrough",
-        n_jobs=-1,
-    )
-
-    return make_pipeline(col_trans1)#, col_trans2)
+    return final_pipe

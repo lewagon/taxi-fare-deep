@@ -27,13 +27,13 @@ class TimeFeaturesEncoder(BaseEstimator, TransformerMixin):
         pickup_dt = pickup_dt.dt.tz_convert(self.time_zone_name).dt
         dow = pickup_dt.weekday
         hour = pickup_dt.hour
-        hour_sin = sinuser(hour, 24)
-        hour_cos = cosinuser(hour, 24)
         month = pickup_dt.month
-        month_sin = sinuser(month, 12)
-        month_cos = cosinuser(month, 12)
         year = pickup_dt.year
-        return pd.concat([dow, year, hour_sin, hour_cos, month_sin, month_cos], axis=1)
+        #hour_sin = sinuser(hour, 24)
+        #hour_cos = cosinuser(hour, 24)
+        #month_sin = sinuser(month, 12)
+        #month_cos = cosinuser(month, 12)
+        return pd.concat([hour, dow, month, year], axis=1)
 
 
 class DistanceTransformer(BaseEstimator, TransformerMixin):

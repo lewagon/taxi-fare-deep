@@ -44,6 +44,8 @@ class Trainer:
     @simple_time_tracker
     def fit(self, plot_history=True, verbose=1):
         print("###### fitting...")
+        # TensorFlow cannot work with Sparse Matrix out of Sklearn's OHE
+        self.X_train_preproc = self.X_train_preproc.todense()
         self.network = Network(input_dim=self.X_train_preproc.shape[1])
         print(self.network.model.summary())
         self.network.compile_model()

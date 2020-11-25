@@ -69,6 +69,7 @@ class Trainer:
         y_test_pred = self.network.model.predict(self.pipe.transform(X_test))
 
         print("###### test score (MAE)", mean_absolute_error(y_test, y_test_pred))
+        # todo
 
 
 if __name__ == "__main__":
@@ -83,7 +84,7 @@ if __name__ == "__main__":
     trainer.preproc(test_size=0.3)
 
     # Fit neural network and show training performance
-    trainer.fit(plot_history=False, verbose=0)
+    trainer.fit(plot_history=True, verbose=1)
 
     # evaluate on test set (by default the holdout from train/test/split)
     trainer.evaluate(X_test=None, y_test=None)

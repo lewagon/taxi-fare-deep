@@ -4,7 +4,6 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from taxifare_deep.encoders import TimeFeaturesEncoder, DistanceTransformer, AddGeohash
 
 from sklearn.preprocessing import FunctionTransformer
-import ipdb
 
 def create_pipeline():
     lonlat_features = [

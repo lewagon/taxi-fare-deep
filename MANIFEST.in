@@ -1,3 +1,4 @@
 graft taxifare_deep
 global-exclude *.py[cod] __pycache__ *.so *.ipynb
 recursive-exclude  taxifare_deep/jupy *
+include requirements.txt

@@ -14,3 +14,4 @@ sklearn
 s3fs
 pygeohash
 tensorflow
+matplotlib

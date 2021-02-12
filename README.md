@@ -9,7 +9,7 @@ This repository is a python-package that allows to fit a deep learning model pre
 3. Pip-install this repo (which is a package) directly from within your collab notebook, by running this cell below
 
 ```python
-! pip install --quiet git+https://github.com/brunolajoie/taxifare_deep
+! pip install --quiet git+https://github.com/lewagon/taxi-fare-deep
 ```
 
 ## Basic workflow
